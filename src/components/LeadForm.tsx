@@ -5,12 +5,10 @@ import { useState } from "react";
 
 import {
 	buildLeadPayload,
-	createLeadMailtoHref,
-	createLeadReference,
 	type LeadFormState,
 	validateLead,
 } from "@/lib/leads";
-import { business, primaryBusinessContact } from "@/lib/site";
+import { primaryBusinessContact } from "@/lib/site";
 
 type LeadFormProps = {
 	type: "contact" | "quote";
@@ -21,13 +19,20 @@ const initialState: LeadFormState = {
 	message: "",
 };
 
-function SubmitButton({ label }: { label: string }) {
+function SubmitButton({
+	label,
+	isSubmitting,
+}: {
+	label: string;
+	isSubmitting: boolean;
+}) {
 	return (
 		<button
 			type="submit"
-			className="w-full rounded-full bg-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-emerald-700"
+			disabled={isSubmitting}
+			className="w-full rounded-full bg-emerald-600 px-6 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-400"
 		>
-			{label}
+			{isSubmitting ? "Sending..." : label}
 		</button>
 	);
 }
@@ -40,9 +45,10 @@ function FieldError({ error }: { error?: string }) {
 
 export default function LeadForm({ type }: LeadFormProps) {
 	const [state, setState] = useState(initialState);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const errors = state.fieldErrors ?? {};
 
-	function handleSubmit(event: FormEvent<HTMLFormElement>) {
+	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
 		const formData = new FormData(event.currentTarget);
@@ -54,18 +60,31 @@ export default function LeadForm({ type }: LeadFormProps) {
 			return;
 		}
 
-		const reference = createLeadReference();
-		setState({
-			success: true,
-			message:
-				"Your default email app should open with this request prefilled. If it does not, call us directly and mention the reference below.",
-			reference,
-		});
-		window.location.href = createLeadMailtoHref(
-			payload,
-			reference,
-			business.leadRecipientEmail,
-		);
+		setIsSubmitting(true);
+		try {
+			const response = await fetch("/api/lead", {
+				method: "POST",
+				headers: {
+					"content-type": "application/json",
+				},
+				body: JSON.stringify(payload),
+			});
+			const nextState = (await response.json()) as LeadFormState;
+			setState(nextState);
+
+			if (response.ok) {
+				event.currentTarget.reset();
+			}
+		} catch (error) {
+			console.error("[lead-submit-error]", error);
+			setState({
+				success: false,
+				message:
+					"We could not send your request right now. Please call us directly.",
+			});
+		} finally {
+			setIsSubmitting(false);
+		}
 	}
 
 	return (
@@ -180,8 +199,8 @@ export default function LeadForm({ type }: LeadFormProps) {
 			) : null}
 
 			<p className="text-sm text-slate-500">
-				Submitting opens your default email app with this request prefilled. If
-				no email app opens, call{" "}
+				Submitting sends your request directly to our team. If the form does not
+				go through, call{" "}
 				<a
 					href={primaryBusinessContact.phoneHref}
 					className="font-medium text-emerald-700 underline-offset-4 hover:underline"
@@ -228,7 +247,10 @@ export default function LeadForm({ type }: LeadFormProps) {
 				</div>
 			) : null}
 
-			<SubmitButton label={type === "quote" ? "Request Quote" : "Send Message"} />
+			<SubmitButton
+				label={type === "quote" ? "Request Quote" : "Send Message"}
+				isSubmitting={isSubmitting}
+			/>
 		</form>
 	);
 }

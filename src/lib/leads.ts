@@ -19,14 +19,6 @@ export type LeadPayload = {
 };
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const SERVICE_TYPE_LABELS: Record<string, string> = {
-	"new-installation": "New System Installation",
-	repair: "System Repair",
-	maintenance: "Seasonal Maintenance",
-	"backflow-testing": "Backflow Testing",
-	upgrade: "System Upgrade",
-	consultation: "Consultation",
-};
 
 export function normalizeLeadValue(value: FormDataEntryValue | null) {
 	return typeof value === "string" ? value.trim() : "";
@@ -86,49 +78,4 @@ export function validateLead(payload: LeadPayload): LeadFormState | null {
 
 export function createLeadReference() {
 	return `WIS-${Date.now().toString(36).toUpperCase()}`;
-}
-
-function getLeadSubject(formType: LeadFormKind, reference: string) {
-	return formType === "quote"
-		? `Quote request (${reference})`
-		: `Contact message (${reference})`;
-}
-
-function getServiceTypeLabel(serviceType?: string) {
-	if (!serviceType) {
-		return "";
-	}
-
-	return SERVICE_TYPE_LABELS[serviceType] ?? serviceType;
-}
-
-function getLeadBody(payload: LeadPayload, reference: string) {
-	return [
-		`Reference: ${reference}`,
-		`Form type: ${payload.formType}`,
-		`Name: ${payload.name}`,
-		`Email: ${payload.email}`,
-		`Phone: ${payload.phone}`,
-		payload.address ? `Address: ${payload.address}` : "",
-		payload.zipCode ? `ZIP code: ${payload.zipCode}` : "",
-		payload.serviceType
-			? `Service type: ${getServiceTypeLabel(payload.serviceType)}`
-			: "",
-		"",
-		"Message:",
-		payload.message,
-	]
-		.filter(Boolean)
-		.join("\n");
-}
-
-export function createLeadMailtoHref(
-	payload: LeadPayload,
-	reference: string,
-	emailAddress: string,
-) {
-	const subject = encodeURIComponent(getLeadSubject(payload.formType, reference));
-	const body = encodeURIComponent(getLeadBody(payload, reference));
-
-	return `mailto:${emailAddress}?subject=${subject}&body=${body}`;
 }
