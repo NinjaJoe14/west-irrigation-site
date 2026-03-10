@@ -29,8 +29,8 @@ export const business = {
 			phoneHref: "tel:+19033401919",
 		},
 	] satisfies BusinessContact[],
-	email: "westirrigationservices@gmail.com",
-	leadRecipientEmail: "westirrigationservices@gmail.com",
+	email: "contact@westirrigationservices.net",
+	leadRecipientEmail: "contact@westirrigationservices.net",
 	leadSenderEmail: "notifications@westirrigationservices.com",
 	baseUrl: "https://www.westirrigationservices.com",
 	hours: [
