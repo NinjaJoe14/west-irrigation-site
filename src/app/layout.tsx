@@ -32,7 +32,9 @@ export default function RootLayout({
 							image: `${business.baseUrl}/logo.png`,
 							description:
 								"Irrigation installation, sprinkler repair, maintenance, and backflow testing for residential and light-commercial properties in East Texas.",
-							telephone: business.phoneHref.replace("tel:", ""),
+							telephone: business.contacts.map((contact) =>
+								contact.phoneHref.replace("tel:", ""),
+							),
 							email: business.email,
 							address: {
 								"@type": "PostalAddress",

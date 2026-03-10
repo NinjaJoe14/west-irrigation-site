@@ -10,7 +10,7 @@ import {
 	type LeadFormState,
 	validateLead,
 } from "@/lib/leads";
-import { business } from "@/lib/site";
+import { business, primaryBusinessContact } from "@/lib/site";
 
 type LeadFormProps = {
 	type: "contact" | "quote";
@@ -183,10 +183,10 @@ export default function LeadForm({ type }: LeadFormProps) {
 				Submitting opens your default email app with this request prefilled. If
 				no email app opens, call{" "}
 				<a
-					href={business.phoneHref}
+					href={primaryBusinessContact.phoneHref}
 					className="font-medium text-emerald-700 underline-offset-4 hover:underline"
 				>
-					{business.phoneDisplay}
+					{primaryBusinessContact.name}: {primaryBusinessContact.phoneDisplay}
 				</a>
 				.
 			</p>

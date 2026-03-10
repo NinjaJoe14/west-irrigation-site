@@ -36,12 +36,17 @@ export default function Contact() {
 									<p className="text-sm font-semibold uppercase tracking-[0.25em] text-emerald-700">
 										Phone
 									</p>
-									<a
-										href={business.phoneHref}
-										className="mt-2 inline-block text-lg font-semibold text-slate-900"
-									>
-										{business.phoneDisplay}
-									</a>
+									<div className="mt-2 space-y-2">
+										{business.contacts.map((contact) => (
+											<a
+												key={contact.phoneHref}
+												href={contact.phoneHref}
+												className="block text-lg font-semibold text-slate-900"
+											>
+												{contact.name}: {contact.phoneDisplay}
+											</a>
+										))}
+									</div>
 								</div>
 								<div>
 									<p className="text-sm font-semibold uppercase tracking-[0.25em] text-emerald-700">

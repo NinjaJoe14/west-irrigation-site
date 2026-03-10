@@ -9,10 +9,26 @@ export type ServiceArea = {
 	services: string[];
 };
 
+export type BusinessContact = {
+	name: string;
+	phoneDisplay: string;
+	phoneHref: string;
+};
+
 export const business = {
 	name: "West Irrigation Services",
-	phoneDisplay: "(903) 555-0123",
-	phoneHref: "tel:+19035550123",
+	contacts: [
+		{
+			name: "Chris West",
+			phoneDisplay: "(469) 474-9266",
+			phoneHref: "tel:+14694749266",
+		},
+		{
+			name: "Joseph West",
+			phoneDisplay: "(903) 340-1919",
+			phoneHref: "tel:+19033401919",
+		},
+	] satisfies BusinessContact[],
 	email: "info@westirrigationservices.com",
 	leadRecipientEmail: "westirrigationservices@gmail.com",
 	leadSenderEmail: "notifications@westirrigationservices.com",
@@ -23,6 +39,8 @@ export const business = {
 		"Emergency repair appointments available when needed",
 	],
 };
+
+export const primaryBusinessContact = business.contacts[0];
 
 export const serviceAreas: ServiceArea[] = [
 	{

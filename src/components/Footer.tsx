@@ -46,7 +46,13 @@ export default function Footer() {
 				<div>
 					<h2 className="text-lg font-semibold">Contact</h2>
 					<div className="mt-3 space-y-2 text-sm text-slate-300">
-						<p>{business.phoneDisplay}</p>
+						<div className="space-y-1">
+							{business.contacts.map((contact) => (
+								<p key={contact.phoneHref}>
+									{contact.name}: {contact.phoneDisplay}
+								</p>
+							))}
+						</div>
 						<p>{business.email}</p>
 						<Link
 							href="/quote-request"
