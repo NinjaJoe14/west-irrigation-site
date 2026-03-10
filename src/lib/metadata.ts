@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { business } from "@/lib/site";
+
 interface MetaOptions {
   title: string;
   description: string;
@@ -9,7 +11,7 @@ interface MetaOptions {
 
 export function createMetadata(options: MetaOptions): Metadata {
   const { title, description, keywords = "", url = "" } = options;
-  const baseUrl = "https://www.westirrigationservices.com";
+  const baseUrl = business.baseUrl;
   const fullUrl = url ? `${baseUrl}${url}` : baseUrl;
 
   return {

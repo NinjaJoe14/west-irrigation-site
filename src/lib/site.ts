@@ -32,7 +32,7 @@ export const business = {
 	email: "contact@westirrigationservices.net",
 	leadRecipientEmail: "contact@westirrigationservices.net",
 	leadSenderEmail: "notifications@westirrigationservices.com",
-	baseUrl: "https://www.westirrigationservices.com",
+	baseUrl: "https://westirrigationservices.net",
 	hours: [
 		"Monday - Friday: 8:00 AM - 6:00 PM",
 		"Saturday: 8:00 AM - 2:00 PM",
